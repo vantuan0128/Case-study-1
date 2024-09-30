@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Đường dẫn tới file CSS -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif; /* Font chữ mặc định cho trang */
+        }
+
+        header {
+            background-color: #f8f8f8; /* Màu nền của header */
+            padding: 20px; /* Khoảng cách bên trong header */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng cho header */
+        }
+
+        .header {
+            display: flex; /* Sử dụng Flexbox để căn chỉnh logo */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: space-between; /* Giãn cách giữa logo và các phần khác */
+            max-width: 1200px; /* Độ rộng tối đa cho header */
+            margin: 0 auto; /* Căn giữa header */
+        }
+
+        img {
+            height: 50px; /* Chiều cao của logo */
+            width: 100px; /* Tự động điều chỉnh chiều rộng để giữ tỉ lệ */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header">
+        <div class="logo">
+            <img src="/images/Oreo-Logo.png" alt="Logo" />
+        </div>
+    </div>
+</header>
+</body>
+</html>
