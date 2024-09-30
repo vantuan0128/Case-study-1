@@ -23,9 +23,9 @@ public class AuthService {
         }
 
         if (employee.getRole() == Role.ADMIN) {
-            return "adminHome";
+            return "redirect:adminHome";
         } else if (employee.getRole() == Role.USER) {
-            return "userHome";
+            return "redirect:userHome";
         }
 
         return null;

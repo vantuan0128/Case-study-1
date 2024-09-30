@@ -1,21 +1,19 @@
-/* Đặt các thiết lập cơ bản cho footer */
+/* Đặt footer để dính ở dưới cùng màn hình */
 .footer-container {
-    text-align: center;
-    padding: 20px 0;
     background-color: #333;
     color: #fff;
-    margin-top: 20px;
-}
-
-.footer-container p {
-    margin: 0;
-    font-size: 14px;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
 .footer-container nav ul {
     list-style: none;
     padding: 0;
-    margin: 10px 0 0 0;
+    margin: 10px 0;
     display: flex;
     justify-content: center;
 }

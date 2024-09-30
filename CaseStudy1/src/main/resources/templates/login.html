@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
-<!--    <div th:replace="fragments/header :: header"></div>-->
-
-    <h2>Login</h2>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <br><br><br><br>
+    <h2>Vui lòng đăng nhập để sử dụng hệ thống</h2>
     <form action="/login" method="post">
-        <label for="username">Username:</label>
+        <label for="username">Email:</label>
         <input type="text" id="username" name="username" required>
         <br>
-        <label for="password">Password:</label>
+        <label for="password">Mật khẩu:</label>
         <input type="password" id="password" name="password" required>
         <br>
-        <button type="submit">Login</button>
+        <button type="submit">Đăng nhập</button>
     </form>
 
     <div th:if="${error}" style="color: red;">
         <p th:text="${error}"></p>
     </div>
 
-<!--    <div th:replace="fragments/footer :: footer"></div>-->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
