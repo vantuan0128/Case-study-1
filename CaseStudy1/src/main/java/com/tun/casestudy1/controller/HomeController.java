@@ -28,6 +28,16 @@ public class HomeController {
         return "login";
     }
 
+    @GetMapping("/adminHome")
+    public String getAdminPage() {
+        return "adminHome";
+    }
+
+    @GetMapping("/userHome")
+    public String getUserPage() {
+        return "userHome";
+    }
+
     @PostMapping("/login")
     public String login(String username, String password, Model model) {
         String viewName = authService.authenticate(username, password);
