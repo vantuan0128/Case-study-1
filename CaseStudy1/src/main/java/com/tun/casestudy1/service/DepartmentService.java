@@ -12,26 +12,36 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class DepartmentService{
+public class DepartmentService implements IService<Department>{
 
     DepartmentRepository departmentRepository;
 
+    @Override
     public List<Department> findAll() {
         return departmentRepository.findAll();
     }
 
+    @Override
+    public Department find(int id) {
+        return departmentRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public void delete(int id) {
         departmentRepository.deleteById(id);
     }
 
+    @Override
     public void save(Department department) {
         departmentRepository.save(department);
     }
 
-    public void update(int id, Department department) {
+    public void update(int id, String name) {
         Department department1 = departmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not found"));
 
-        department1.setName(department.getName());
+        department1.setName(name);
+
+        departmentRepository.save(department1);
     }
 }
