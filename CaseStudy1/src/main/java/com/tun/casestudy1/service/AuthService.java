@@ -1,6 +1,5 @@
 package com.tun.casestudy1.service;
 
-import com.tun.casestudy1.dto.request.LoginDto;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.enums.Role;
 import com.tun.casestudy1.repository.EmployeeRepository;
@@ -13,21 +12,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
+
     EmployeeRepository employeeRepository;
 
     public String authenticate(String username, String password) {
-        Employee employee = employeeRepository.findByEmail(username);
-
-        if (employee == null || !employee.getPassword().equals(password)) {
-            return null;
+        Employee employee = employeeRepository.findByEmail(username)
+                .orElse(null);
+        if (employee != null && password.equals(employee.getPassword())) {
+            if (employee.getRole() == Role.ADMIN) {
+                return "redirect:/admin/adminHome";
+            } else if (employee.getRole() == Role.USER) {
+                return "redirect:/user/userHome";
+            }
         }
-
-        if (employee.getRole() == Role.ADMIN) {
-            return "redirect:adminHome";
-        } else if (employee.getRole() == Role.USER) {
-            return "redirect:userHome";
-        }
-
         return null;
+    }
+
+    public String getRoleByUsername(String username) {
+        Employee employee = employeeRepository.findByEmail(username).orElse(null);
+        if (employee != null) {
+            return employee.getRole().name(); // giả sử role là enum
+        }
+        return null; // người dùng không tồn tại
     }
 }

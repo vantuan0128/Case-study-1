@@ -1,0 +1,48 @@
+.admin-nav {
+    background-color: #fed9d9;
+    overflow: hidden;
+}
+
+.admin-nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.admin-nav ul li {
+    float: left;
+}
+
+.admin-nav ul li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    border-right: 1px solid #ccc; /* Thêm đường viền phải */
+}
+
+.admin-nav ul li a:last-child {
+    border-right: none; /* Bỏ đường viền của phần tử cuối cùng */
+}
+
+.admin-nav ul li a:hover {
+    background-color: #575757;
+    color: white;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}

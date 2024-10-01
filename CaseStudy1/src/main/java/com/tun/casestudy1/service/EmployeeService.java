@@ -1,7 +1,6 @@
 package com.tun.casestudy1.service;
 
 import com.tun.casestudy1.dto.request.EmployeeSearchDto;
-import com.tun.casestudy1.dto.response.EmployeeResponse;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.repository.EmployeeRepository;
 import jakarta.persistence.criteria.Predicate;
@@ -16,53 +15,46 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class EmployeeService{
+public class EmployeeService implements IService<Employee>{
 
     EmployeeRepository employeeRepository;
 
-    public List<EmployeeResponse> findAll() {
-        List<Employee> employees = employeeRepository.findAll();
-        List<EmployeeResponse> employeeResponses = employees.stream().map(
-                employee -> {
-                    EmployeeResponse employeeResponse = EmployeeResponse.builder()
-                            .id(employee.getId())
-                            .name(employee.getName())
-                            .gender(employee.getGender())
-                            .imageUrl(employee.getImageUrl())
-                            .dOB(employee.getDOB())
-                            .salary(employee.getSalary())
-                            .level(employee.getLevel())
-                            .email(employee.getEmail())
-                            .phoneNumber(employee.getPhoneNumber())
-                            .note(employee.getNote())
-                            .departmentId(employee.getDepartmentId())
-                            .build();
-                    return employeeResponse;
-                }
-        ).toList();
-        return employeeResponses;
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 
+    @Override
+    public Employee find(int id) {
+        return employeeRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public void delete(int id) {
         employeeRepository.deleteById(id);
     }
 
+    @Override
     public void save(Employee employee) {
         employeeRepository.save(employee);
     }
 
-    public void update(int id, Employee employee) {
+    public void updateAccount(int id, String name, String email, String password) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
-        employee1.setName(employee.getName());
-        employee1.setGender(employee.getGender());
-        employee1.setImageUrl(employee.getImageUrl());
-        employee1.setDOB(employee.getDOB());
-        employee1.setSalary(employee.getSalary());
-        employee1.setLevel(employee.getLevel());
-        employee1.setEmail(employee.getEmail());
-        employee1.setPhoneNumber(employee.getPhoneNumber());
-        employee1.setNote(employee.getNote());
+        employee1.setName(name);
+        employee1.setEmail(email);
+        employee1.setPassword(password);
+
+        employeeRepository.save(employee1);
+    }
+
+    public void updateEmployee(int id, String name, String email, String password) {
+        Employee employee1 = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not Found"));
+        employee1.setName(name);
+        employee1.setEmail(email);
+        employee1.setPassword(password);
 
         employeeRepository.save(employee1);
     }
