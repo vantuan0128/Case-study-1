@@ -29,7 +29,9 @@ public class AdminController {
     }
 
     @GetMapping("/employee-management")
-    public String getEmployeeManagementPage()  {
+    public String getEmployeeManagementPage(Model model)  {
+        List<Employee> employees = employeeService.findAll();
+        model.addAttribute("employees", employees);
         return "admin/employee-management";
     }
 
@@ -109,8 +111,11 @@ public class AdminController {
 
     @PostMapping("/edit-employee")
     public String updateEmployee(@RequestParam("id") int id,
-                                   @RequestParam("name") String name) {
-        employeeService.updateEmployee(id, name);
+                                 @RequestParam("name") String name,
+                                 @RequestParam("level") int level,
+                                 @RequestParam("phoneNumber") String phoneNumber,
+                                 @RequestParam("salary") int salary) {
+        employeeService.updateEmployee(id, name, level, phoneNumber, salary);
         return "redirect:/admin/employee-management";
     }
 

@@ -2,46 +2,47 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách phòng ban</title>
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/table.css">
 
 </head>
 <body>
-<div th:replace="fragments/navbar-admin :: nav"></div>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
 
-<h2>Quản lý phòng ban</h2>
+    <h2>Quản lý phòng ban</h2>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Tên</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="department : ${departments}">
-        <td th:text="${department.id}"></td>
-        <td th:text="${department.name}"></td>
-        <td>
-            <button th:onclick="'location.href=\'/admin/edit-department/' + ${department.id} + '\''">Sửa</button>
-            <button th:onclick="'deleteDepartment(' + ${department.id} + ')'">Xóa</button>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department : ${departments}">
+            <td th:text="${department.id}"></td>
+            <td th:text="${department.name}"></td>
+            <td>
+                <button th:onclick="'location.href=\'/admin/edit-department/' + ${department.id} + '\''">Sửa</button>
+                <button th:onclick="'deleteDepartment(' + ${department.id} + ')'">Xóa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-<div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script>
-    function deleteDepartment(id) {
-        if (confirm('Bạn có chắc chắn muốn xóa phòng ban này không?')) {
-            location.href = '/admin/delete-department/' + id; // Gọi phương thức xóa
+
+    <script>
+        function deleteDepartment(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa phòng ban này không?')) {
+                location.href = '/admin/delete-department/' + id; // Gọi phương thức xóa
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>
