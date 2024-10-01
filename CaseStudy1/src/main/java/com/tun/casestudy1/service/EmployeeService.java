@@ -49,12 +49,13 @@ public class EmployeeService implements IService<Employee>{
         employeeRepository.save(employee1);
     }
 
-    public void updateEmployee(int id, String name, String email, String password) {
+    public void updateEmployee(int id, String name, int level, String phoneNumber, int salary) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
         employee1.setName(name);
-        employee1.setEmail(email);
-        employee1.setPassword(password);
+        employee1.setLevel(level);
+        employee1.setPhoneNumber(phoneNumber);
+        employee1.setSalary(salary);
 
         employeeRepository.save(employee1);
     }

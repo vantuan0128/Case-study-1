@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách tài khoản</title>
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/table.css">
 
 </head>
 <body>
-    <div th:replace="fragments/navbar-admin :: nav"></div>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
 
     <h2>Quản lý tài khoản người dùng</h2>
 
@@ -19,8 +19,8 @@
                 <th>ID</th>
                 <th>Tên</th>
                 <th>Email</th>
-                <th>Password</th>
-                <th>Action</th>
+                <th>Mật khẩu</th>
+                <th>Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +37,8 @@
         </tbody>
     </table>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
 
     <script>
         function deleteAccount(id) {

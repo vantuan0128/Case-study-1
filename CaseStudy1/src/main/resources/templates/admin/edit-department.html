@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/edit-employee.css">
 </head>
 <body>
-    <div th:replace="fragments/navbar-admin :: nav"></div>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
 
     <h2>Sửa thông tin phòng ban</h2>
 
@@ -21,7 +21,8 @@
         <a href="/admin/department-management">Hủy</a>
     </form>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
 
 </body>
 </html>

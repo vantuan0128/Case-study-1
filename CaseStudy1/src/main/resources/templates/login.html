@@ -9,8 +9,9 @@
     <link rel="stylesheet" type="text/css" href="/css/header.css"/>
 </head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
+    <br><br>
     <h2>Vui lòng đăng nhập để sử dụng hệ thống</h2>
 
     <form th:action="@{/login}" method="post">
@@ -27,6 +28,7 @@
         </div>
     </form>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>
