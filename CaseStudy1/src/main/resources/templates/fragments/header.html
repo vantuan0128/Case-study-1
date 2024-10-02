@@ -3,20 +3,30 @@
 <head>
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <div class="logo">
-                <img src="/images/img1.jpg" alt="Logo" />
-                <p class="title">Công ty cổ phần ABC</p>
-            </div>
+<header>
+    <div class="header-left">
+        <div class="logo">
+            <img src="/images/Oreo-Logo.png" alt="Logo" />
+            <p class="title">Công ty cổ phần ABC</p>
         </div>
-        <div class="header-right">
-            <ul class="header-list">
-                <li class ="header-list-text">Chúng tôi làm gì</li>
-                <li class ="header-list-text">Chúng tôi là ai</li>
-                <li class ="header-list-text">Liên hệ</li>
-            </ul>
-        </div>
-    </header>
+    </div>
+    <div class="header-right">
+        <ul class="header-list">
+            <li class ="header-list-text">Chúng tôi làm gì</li>
+            <li class ="header-list-text">Chúng tôi là ai</li>
+            <li class ="header-list-text">Liên hệ</li>
+        </ul>
+    </div>
+    <div class="language-selector">
+<!--        <form action="#" th:action="@{/}" method="get">-->
+<!--            <select name="i18n" onchange="this.form.submit()">-->
+<!--                <option value="vi" href="/?lang=vi">Tiếng Việt</option>-->
+<!--                <option value="en" href="/?lang=en">English</option>-->
+<!--            </select>-->
+<!--        </form>-->
+        <a class="nav-link" href="/?lang=vi">Tiếng Việt</a>
+        <a class="nav-link" href="/?lang=en" >Tiếng Anh</a>
+    </div>
+</header>
 </body>
 </html>

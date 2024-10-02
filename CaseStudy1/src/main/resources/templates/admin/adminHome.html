@@ -6,14 +6,39 @@
     <title>Admin Home</title>
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
 
 </head>
 <body>
     <div th:replace="~{fragments/navbar-admin :: nav}"></div>
 
-    <h1>Danh sách những gương mặt tiêu biểu</h1>
+    <h1>10 gương mặt xuất sắc nhất công ty</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nhân viên</th>
+            <th>Ảnh</th>
+            <th>Tên phòng ban</th>
+            <th>Số thành tích</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="excellentEmployee,idx : ${excellentEmployees}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${excellentEmployee.name}"></td>
+            <td>
+                <img th:src="${excellentEmployee.imageUrl}"
+                     alt="Ảnh thẻ"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+            </td>
+            <td th:text="${excellentEmployee.nameOfDept}"></td>
+            <td th:text="${excellentEmployee.totalAchievements}"></td>
+        </tr>
+        </tbody>
+    </table>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
-
 </body>
 </html>

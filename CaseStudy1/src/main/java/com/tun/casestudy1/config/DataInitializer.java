@@ -28,7 +28,7 @@ public class DataInitializer {
                     .level(10)
                     .phoneNumber("0123456789")
                     .note("Admin account")
-                    .departmentId(1)
+                    .departmentId(5)
                     .build();
             employeeRepository.save(admin);
         }

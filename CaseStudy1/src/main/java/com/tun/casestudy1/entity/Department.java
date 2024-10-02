@@ -18,6 +18,13 @@ public class Department {
 
     String name;
 
-    @OneToMany(mappedBy = "department",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department",cascade = {CascadeType.MERGE, CascadeType.PERSIST},fetch = FetchType.LAZY)
     List<Employee> employees;
+
+    @PreRemove
+    private void preRemove() {
+        for (Employee employee : employees) {
+            employee.setDepartmentId(null);
+        }
+    }
 }

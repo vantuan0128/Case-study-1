@@ -1,5 +1,8 @@
 package com.tun.casestudy1.service;
 
+import com.tun.casestudy1.dto.DepartmentAchievementDto;
+import com.tun.casestudy1.dto.EmployeeAchievementDto;
+import com.tun.casestudy1.dto.ExcellentEmployeeDto;
 import com.tun.casestudy1.entity.EmployeeRecord;
 import com.tun.casestudy1.repository.EmployeeRecordRepository;
 import lombok.AccessLevel;
@@ -7,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +41,42 @@ public class EmployeeRecordService implements IService<EmployeeRecord>{
         employeeRecordRepository.save(employeeRecord);
     }
 
-    public void update(int id, EmployeeRecord employeeRecord) {
-        EmployeeRecord employeeRecord1 = employeeRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
-        employeeRecord1.setType(employeeRecord.getType());
-        employeeRecord1.setReason(employeeRecord.getReason());
-        employeeRecord1.setDate(employeeRecord.getDate());
 
-        employeeRecordRepository.save(employeeRecord1);
+    public List<EmployeeAchievementDto> findAndCountByEmployeeId() {
+        List<Object[]> list = employeeRecordRepository.getEmployeeAchievementSummary();
+
+        return list.stream()
+                .map(result -> new EmployeeAchievementDto(
+                        (int) result[0],
+                        (String) result[1],
+                        ((BigDecimal) result[2]).intValue(),
+                        ((BigDecimal) result[3]).intValue(),
+                        ((BigDecimal) result[4]).intValue()))
+                .collect(Collectors.toList());
+    }
+
+    public List<DepartmentAchievementDto> findAndCountByDepartmentId() {
+        List<Object[]> list = employeeRecordRepository.getDepartmentAchievementSummary();
+
+        return list.stream()
+                .map(result -> new DepartmentAchievementDto(
+                        (int) result[0],
+                        (String) result[1],
+                        ((BigDecimal) result[2]).intValue(),
+                        ((BigDecimal) result[3]).intValue(),
+                        ((BigDecimal) result[4]).intValue()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ExcellentEmployeeDto> findExcellentEmployees() {
+        List<Object[]> list = employeeRecordRepository.getExcellentEmployees();
+        return list.stream()
+                .map(result -> new ExcellentEmployeeDto(
+                        (int) result[0],
+                        (String) result[1],
+                        (String) result[2],
+                        (String) result[3],
+                        ((BigDecimal) result[4]).intValue()))
+                .collect(Collectors.toList());
     }
 }

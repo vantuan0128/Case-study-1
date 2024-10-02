@@ -42,12 +42,12 @@ public class Employee {
     @Builder.Default
     Role role = Role.USER;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", insertable = false, updatable = false)
     Department department;
 
     @Column(name = "department_id")
-    int departmentId;
+    Integer departmentId;
 
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     List<EmployeeRecord> employeeRecords;

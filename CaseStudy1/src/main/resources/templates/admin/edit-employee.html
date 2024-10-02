@@ -17,6 +17,13 @@
         <label>Tên:</label>
         <input type="text" th:name="name" th:value="${employee.name}" required/>
 
+        <label>Phòng ban:</label>
+        <select th:name="departmentId" required>
+            <option th:each="dept : ${departments}"
+                    th:value="${dept.id}"
+                    th:text="${dept.name}"
+                    th:selected="${dept.id == employee.departmentId}">
+        </select>
 
         <label>Cấp độ (Từ 1 đến 10):</label>
         <input type="text" th:name="level" th:value="${employee.level}" required/>

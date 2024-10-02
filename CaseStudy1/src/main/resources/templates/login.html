@@ -11,8 +11,7 @@
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <br><br>
-    <h2>Vui lòng đăng nhập để sử dụng hệ thống</h2>
+    <h2 th:text="#{homepage.login}">Vui lòng đăng nhập để sử dụng hệ thống</h2>
 
     <form th:action="@{/login}" method="post">
         <label for="username">Email:</label>
@@ -29,6 +28,5 @@
     </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
-
 </body>
 </html>

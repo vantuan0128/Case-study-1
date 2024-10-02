@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ghi nhận thành tích/kỷ luật</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/edit-employee.css">
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h2>Ghi nhận thành tích/kỷ luật cho nhân viên</h2>
+
+    <form class="edit-form" action="/admin/add-achievement" method="post">
+        <label>Nhân viên:</label>
+        <select th:name="employeeId" required>
+            <option th:each="employee : ${employees}"
+                    th:value="${employee.id}"
+                    th:text="${employee.id} + ' - ' + ${employee.name} + ' - ' + ${employee.department.name}">
+        </select>
+
+        <label for="type_achivement">Loại:</label>
+        <select id="type_achivement" th:name="type" required>
+            <option value="1">Thành tích</option>
+            <option value="0">Kỷ luật</option>
+        </select>
+
+        <label>Lý do:</label>
+        <input type="text" th:name="reason" required/>
+
+        <label for="dateOfRecognition">Ngày ghi nhận:</label>
+        <input type="date" id="dateOfRecognition" th:name="date" required />
+
+        <button type="submit">Tạo</button>
+        <a href="/admin/employee-management">Hủy</a>
+    </form>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

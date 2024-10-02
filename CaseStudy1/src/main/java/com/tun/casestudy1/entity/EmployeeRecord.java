@@ -22,7 +22,7 @@ public class EmployeeRecord {
 
     LocalDate date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", insertable = false, updatable = false)
     Employee employee;
 

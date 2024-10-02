@@ -24,13 +24,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="employee : ${employees}">
-                <td th:text="${employee.id}"></td>
+            <tr th:each="employee,idx : ${employees}">
+                <td th:text="${idx.count}"></td>
                 <td th:text="${employee.name}"></td>
                 <td th:text="${employee.email}"></td>
                 <td th:text="${employee.password}"></td>
-                <td>
-                    <button th:onclick="'location.href=\'/admin/edit-account/' + ${employee.id} + '\''">Sửa</button>
+                <td th:if="${employee.role.name() == 'USER'}">
+                    <button th:onclick="|location.href='/admin/edit-account/' + ${employee.id}|">Sửa</button>
                     <button th:onclick="'deleteAccount(' + ${employee.id} + ')'">Xóa</button>
                 </td>
             </tr>
@@ -38,7 +38,6 @@
     </table>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
-
 
     <script>
         function deleteAccount(id) {
