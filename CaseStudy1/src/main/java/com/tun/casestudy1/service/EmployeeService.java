@@ -1,15 +1,13 @@
 package com.tun.casestudy1.service;
 
-import com.tun.casestudy1.dto.request.EmployeeSearchDto;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.repository.EmployeeRepository;
-import jakarta.persistence.criteria.Predicate;
+import com.tun.casestudy1.repository.specifications.EmployeeSpecifications;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,64 +34,46 @@ public class EmployeeService implements IService<Employee>{
 
     @Override
     public void save(Employee employee) {
-        employeeRepository.save(employee);
+        Employee employee1 = Employee.builder()
+                .name(employee.getName())
+                .email(employee.getEmail())
+                .password(employee.getPassword())
+                .gender(employee.getGender())
+                .salary(employee.getSalary())
+                .level(employee.getLevel())
+                .phoneNumber(employee.getPhoneNumber())
+                .note(employee.getNote())
+                .imageUrl(employee.getImageUrl())
+                .dOB(employee.getDOB())
+                .departmentId(employee.getDepartmentId())
+                .build();
+        employeeRepository.save(employee1);
     }
 
-    public void updateAccount(int id, String name, String email, String password) {
+    public void updateAccount(int id, Employee employee) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
-        employee1.setName(name);
-        employee1.setEmail(email);
-        employee1.setPassword(password);
+        employee1.setName(employee.getName());
+        employee1.setEmail(employee.getEmail());
+        employee1.setPassword(employee.getPassword());
 
         employeeRepository.save(employee1);
     }
 
-    public void updateEmployee(int id, String name, int level, String phoneNumber, int salary) {
+    public void updateEmployee(int id, Employee employee) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
-        employee1.setName(name);
-        employee1.setLevel(level);
-        employee1.setPhoneNumber(phoneNumber);
-        employee1.setSalary(salary);
+        employee1.setName(employee.getName());
+        employee1.setLevel(employee.getLevel());
+        employee1.setPhoneNumber(employee.getPhoneNumber());
+        employee1.setSalary(employee.getSalary());
+        employee1.setDepartmentId(employee.getDepartmentId());
 
         employeeRepository.save(employee1);
     }
 
-    public List<Employee> searchUser(EmployeeSearchDto searchDto) {
-        return employeeRepository.findAll((root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (searchDto.getName() != null && !searchDto.getName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get("name")), "%" + searchDto.getName().toLowerCase() + "%"));
-            }
-
-            if (searchDto.getGender() != null) {
-                predicates.add(cb.equal(root.get("gender"), searchDto.getGender()));
-            }
-
-            if (searchDto.getDOB() != null) {
-                predicates.add(cb.equal(root.get("dOB"), searchDto.getDOB()));
-            }
-
-            if (searchDto.getSalary() != null) {
-                predicates.add(cb.equal(root.get("salary"), searchDto.getSalary()));
-            }
-
-            if (searchDto.getLevel() != null) {
-                predicates.add(cb.equal(root.get("level"), searchDto.getLevel()));
-            }
-
-            if (searchDto.getEmail() != null && !searchDto.getEmail().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get("email")), "%" + searchDto.getEmail().toLowerCase() + "%"));
-            }
-
-            if (searchDto.getPhoneNumber() != null && !searchDto.getPhoneNumber().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get("phoneNumber")), "%" + searchDto.getPhoneNumber().toLowerCase() + "%"));
-            }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        });
+    public List<Employee> searchUser(String query) {
+        return employeeRepository.searchByQuery(query);
     }
 
 }
