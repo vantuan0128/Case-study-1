@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
 </head>
 <body>
 <header>
@@ -12,20 +13,14 @@
     </div>
     <div class="header-right">
         <ul class="header-list">
-            <li class ="header-list-text">Chúng tôi làm gì</li>
-            <li class ="header-list-text">Chúng tôi là ai</li>
-            <li class ="header-list-text">Liên hệ</li>
+            <li class ="header-list-text" th:text="#{homepage.sub1}">Chúng tôi làm gì</li>
+            <li class ="header-list-text" th:text="#{homepage.sub2}">Chúng tôi là ai</li>
+            <li class ="header-list-text" th:text="#{homepage.sub3}">Liên hệ</li>
         </ul>
     </div>
     <div class="language-selector">
-<!--        <form action="#" th:action="@{/}" method="get">-->
-<!--            <select name="i18n" onchange="this.form.submit()">-->
-<!--                <option value="vi" href="/?lang=vi">Tiếng Việt</option>-->
-<!--                <option value="en" href="/?lang=en">English</option>-->
-<!--            </select>-->
-<!--        </form>-->
-        <a class="nav-link" href="/?lang=vi">Tiếng Việt</a>
-        <a class="nav-link" href="/?lang=en" >Tiếng Anh</a>
+        <a class="nav-link" th:href="@{/login(lang='vi')}">Tiếng Việt</a>
+        <a class="nav-link" th:href="@{/login(lang='en')}">Tiếng Anh</a>
     </div>
 </header>
 </body>
