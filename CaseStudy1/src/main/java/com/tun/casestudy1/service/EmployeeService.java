@@ -1,8 +1,9 @@
 package com.tun.casestudy1.service;
 
+import com.tun.casestudy1.dto.request.UpdateAccountDto;
+import com.tun.casestudy1.dto.request.UpdateEmployeeDto;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.repository.EmployeeRepository;
-import com.tun.casestudy1.repository.specifications.EmployeeSpecifications;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -50,7 +51,7 @@ public class EmployeeService implements IService<Employee>{
         employeeRepository.save(employee1);
     }
 
-    public void updateAccount(int id, Employee employee) {
+    public void updateAccount(int id, UpdateAccountDto employee) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
         employee1.setName(employee.getName());
@@ -60,7 +61,7 @@ public class EmployeeService implements IService<Employee>{
         employeeRepository.save(employee1);
     }
 
-    public void updateEmployee(int id, Employee employee) {
+    public void updateEmployee(int id, UpdateEmployeeDto employee) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
         employee1.setName(employee.getName());

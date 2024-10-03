@@ -1,8 +1,10 @@
 package com.tun.casestudy1.controller;
 
-import com.tun.casestudy1.dto.DepartmentAchievementDto;
-import com.tun.casestudy1.dto.EmployeeAchievementDto;
-import com.tun.casestudy1.dto.ExcellentEmployeeDto;
+import com.tun.casestudy1.dto.response.DepartmentAchievementDto;
+import com.tun.casestudy1.dto.response.EmployeeAchievementDto;
+import com.tun.casestudy1.dto.response.ExcellentEmployeeDto;
+import com.tun.casestudy1.dto.request.UpdateAccountDto;
+import com.tun.casestudy1.dto.request.UpdateEmployeeDto;
 import com.tun.casestudy1.entity.Department;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.entity.EmployeeRecord;
@@ -10,6 +12,7 @@ import com.tun.casestudy1.service.DepartmentService;
 import com.tun.casestudy1.service.EmployeeRecordService;
 import com.tun.casestudy1.service.EmployeeService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,42 +39,48 @@ public class AdminController {
     public String adminHomePage(Model model) {
         List<ExcellentEmployeeDto> excellentEmployeeDtos = employeeRecordService.findExcellentEmployees();
         model.addAttribute("excellentEmployees", excellentEmployeeDtos);
-        return "admin/adminHome";
+        model.addAttribute("type", "Homepage");
+        return "admin/view-list";
     }
 
     @GetMapping("/employee-management")
     public String getEmployeeManagementPage(Model model)  {
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
-        return "admin/employee-management";
+        model.addAttribute("type", "Employee");
+        return "admin/view-list";
     }
 
     @GetMapping("/department-management")
     public String getDepartmentManagementPage(Model model) {
         List<Department> departments = departmentService.findAll();
         model.addAttribute("departments", departments);
-        return "admin/department-management";
+        model.addAttribute("type", "Department");
+        return "admin/view-list";
     }
 
     @GetMapping("/account-management")
     public String getAccountManagementPage(Model model) {
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
-        return "admin/account-management";
+        model.addAttribute("type", "Account");
+        return "admin/view-list";
     }
 
     @GetMapping("/view-people-achievements")
     public String getPeopleAchievements(Model model) {
         List<EmployeeAchievementDto> listAchievements = employeeRecordService.findAndCountByEmployeeId();
         model.addAttribute("listAchievements", listAchievements);
-        return "admin/view-people-achievements";
+        model.addAttribute("type", "Employee-achievement");
+        return "admin/view-list";
     }
 
     @GetMapping("/view-departments-achievements")
     public String getDepartmentsAchievements(Model model) {
         List<DepartmentAchievementDto> listAchievements = employeeRecordService.findAndCountByDepartmentId();
         model.addAttribute("listAchievements", listAchievements);
-        return "admin/view-departments-achievements";
+        model.addAttribute("type", "Department-achievement");
+        return "admin/view-list";
     }
 
     @GetMapping("/logout")
@@ -82,22 +91,25 @@ public class AdminController {
 
     // Get Add View
     @GetMapping("/add-department")
-    public String getAddDepartmentPage() {
-        return "admin/add-department";
+    public String getAddDepartmentPage(Model model) {
+        model.addAttribute("type", "Department");
+        return "admin/add";
     }
 
     @GetMapping("/add-employee")
     public String getAddEmployeePage(Model model){
         List<Department> departments = departmentService.findAll();
         model.addAttribute("departments", departments);
-        return "admin/add-employee";
+        model.addAttribute("type", "Employee");
+        return "admin/add";
     }
 
     @GetMapping("/create-achievement")
     public String getAddAchievementPage(Model model) {
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
-        return "admin/add-achievement";
+        model.addAttribute("type", "Employee-achievement");
+        return "admin/add";
     }
 
     // Get Edit View
@@ -106,14 +118,16 @@ public class AdminController {
     public String getEditAccountPage(@PathVariable("id") int id, Model model) {
         Employee employee = employeeService.find(id);
         model.addAttribute("employee", employee);
-        return "admin/edit-account";
+        model.addAttribute("type", "Account");
+        return "admin/edit";
     }
 
     @GetMapping("/edit-department/{id}")
     public String getEditDepartmentPage(@PathVariable("id") int id, Model model) {
         Department department = departmentService.find(id);
         model.addAttribute("department", department);
-        return "admin/edit-department";
+        model.addAttribute("type", "Department");
+        return "admin/edit";
     }
 
     @GetMapping("/edit-employee/{id}")
@@ -122,7 +136,8 @@ public class AdminController {
         model.addAttribute("employee", employee);
         List<Department> departments = departmentService.findAll();
         model.addAttribute("departments", departments);
-        return "admin/edit-employee";
+        model.addAttribute("type", "Employee");
+        return "admin/edit";
     }
 
     // Save
@@ -150,7 +165,7 @@ public class AdminController {
 
     @PostMapping("/edit-account")
     public String updateAccount(@RequestParam("id") int id,
-                               @ModelAttribute Employee employee) {
+                                @Valid @ModelAttribute UpdateAccountDto employee) {
         employeeService.updateAccount(id, employee);
         return "redirect:/admin/account-management";
     }
@@ -164,7 +179,7 @@ public class AdminController {
 
     @PostMapping("/edit-employee")
     public String updateEmployee(@RequestParam("id") int id,
-                                 @ModelAttribute Employee employee) {
+                                 @Valid @ModelAttribute UpdateEmployeeDto employee) {
         employeeService.updateEmployee(id, employee);
         return "redirect:/admin/employee-management";
     }
