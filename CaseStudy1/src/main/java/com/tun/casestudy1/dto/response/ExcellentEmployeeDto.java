@@ -1,4 +1,4 @@
-package com.tun.casestudy1.dto;
+package com.tun.casestudy1.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class DepartmentAchievementDto {
-    int departmentId;
+public class ExcellentEmployeeDto {
+    int employeeId;
     String name;
+    String imageUrl;
+    String nameOfDept;
     int totalAchievements;
-    int totalDisciplinary;
-    int rewardPoints;
 }

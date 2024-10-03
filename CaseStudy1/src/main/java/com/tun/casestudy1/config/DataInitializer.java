@@ -14,6 +14,7 @@ public class DataInitializer {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
     @PostConstruct
     public void init() {
         if (employeeRepository.findByEmail("admin@gmail.com").isEmpty()) {

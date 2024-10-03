@@ -14,13 +14,14 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
     Optional<Employee> findByEmail(String email);
 
+    // Tim kiem theo bat ky truong nao
     @Query(value = "SELECT e.* FROM employee e " +
             "LEFT JOIN department d ON e.department_id = d.id " +
             "WHERE LOWER(e.name) LIKE LOWER(CONCAT('%', :searchValue, '%')) " +
             "OR e.phone_number LIKE CONCAT('%', :searchValue, '%') " +
             "OR LOWER(d.name) LIKE LOWER(CONCAT('%', :searchValue, '%')) " +
-            "OR e.salary LIKE CONCAT('%${', :searchValue, '}%')" +
-            "OR e.level LIKE CONCAT('%${', :searchValue, '}%')" +
-            "OR DATE_FORMAT(e.dOB, '%d/%m/%Y') LIKE :searchValue", nativeQuery = true)
+            "OR e.salary LIKE CONCAT('%', :searchValue, '%')" +
+            "OR e.level LIKE CONCAT('%', :searchValue, '%')" +
+            "OR DATE_FORMAT(e.dOB, '%d/%m/%Y') LIKE CONCAT('%', :searchValue, '%')", nativeQuery = true)
     List<Employee> searchByQuery(@Param("searchValue") String searchValue);
 }

@@ -1,4 +1,4 @@
-package com.tun.casestudy1.dto;
+package com.tun.casestudy1.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

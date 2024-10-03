@@ -1,6 +1,6 @@
 <tbody>
-<tr th:each="employee : ${employees}">
-    <td th:text="${employee.id}"></td>
+<tr th:each="employee,idx : ${employees}">
+    <td th:text="${idx.count}"></td>
     <td>
         <img th:src="${employee.imageUrl}"
              alt="Ảnh thẻ"

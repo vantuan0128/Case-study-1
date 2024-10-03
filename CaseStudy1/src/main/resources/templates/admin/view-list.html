@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <title th:if="${type == 'Department'}" th:text="#{message.department-management}">Danh sách phòng ban</title>
+    <title th:if="${type == 'Employee'}" th:text="#{message.employee-management}">Danh sách nhân viên</title>
+    <title th:if="${type == 'Account'}" th:text="#{message.account-management}">Danh sách tài khoản</title>
+    <title th:if="${type == 'Employee-achievement'}" th:text="#{message.view-employee-achievement}">Thành tích nhân viên</title>
+    <title th:if="${type == 'Department-achievement'}" th:text="#{message.view-department-achievement}">Thành tích phòng ban</title>
+    <title th:if="${type == 'Homepage'}">Admin Home</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <style>
+        .title-button {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+            margin-bottom: -15px;
+        }
+
+        .title-button h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h1 th:if="${type == 'Homepage'}" th:text="#{message.excellent-employee}">10 gương mặt xuất sắc nhất công ty</h1>
+    <h2 th:if="${type == 'Employee-achievement'}" th:text="#{message.view-employee-achievement}">Tổng hợp thành tích các cá nhân</h2>
+    <h2 th:if="${type == 'Department-achievement'}" th:text="#{message.view-department-achievement}">Tổng hợp thành tích các phòng ban</h2>
+
+    <div class="title-button">
+        <h2 th:if="${type == 'Department'}" th:text="#{message.department-management}">Quản lý phòng ban</h2>
+        <h2 th:if="${type == 'Employee'}" th:text="#{message.employee-management}">Quản lý nhân viên</h2>
+        <h2 th:if="${type == 'Account'}" th:text="#{message.account-management}">Quản lý tài khoản người dùng</h2>
+        <button th:if="${type == 'Department'}" th:onclick="|location.href='/admin/add-department'|" th:text="#{table.button.add}">Thêm</button>
+        <button th:if="${type == 'Employee'}" th:onclick="|location.href='/admin/add-employee'|" th:text="#{table.button.add}">Thêm</button>
+        <input th:if="${type == 'Employee'}" type="text" id="searchInput" placeholder="Tìm kiếm" oninput="searchEmployees()"/>
+    </div>
+
+    <table th:if="${type == 'Homepage'}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.employee-name}">Nhân viên</th>
+            <th th:text="#{table.image}">Ảnh</th>
+            <th th:text="#{table.department-name}">Tên phòng ban</th>
+            <th th:text="#{table.number-of-achievement}">Số thành tích</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="excellentEmployee,idx : ${excellentEmployees}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${excellentEmployee.name}"></td>
+            <td>
+                <img th:src="${excellentEmployee.imageUrl}"
+                     alt="Ảnh thẻ"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+            </td>
+            <td th:text="${excellentEmployee.nameOfDept}"></td>
+            <td th:text="${excellentEmployee.totalAchievements}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table th:if="${type == 'Department'}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.department-name}">Tên</th>
+            <th th:text="#{table.action}">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department,idx : ${departments}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${department.name}"></td>
+            <td>
+                <button th:onclick="|location.href='/admin/edit-department/' + ${department.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="'deleteDepartment(' + ${department.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table th:if="${type == 'Employee'}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.image}">Ảnh</th>
+            <th th:text="#{table.employee-name}">Tên</th>
+            <th th:text="#{table.date-of-birth}">Ngày sinh</th>
+            <th th:text="#{table.department-name}">Phòng ban</th>
+            <th th:text="#{table.level}">Cấp độ</th>
+            <th th:text="#{table.phone-number}">Số điện thoại</th>
+            <th th:text="#{table.salary}">Lương</th>
+            <th th:text="#{table.action}">Hành động</th>
+        </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+        <tr th:each="employee,idx : ${employees}">
+            <td th:text="${idx.count}"></td>
+            <td>
+                <img th:src="${employee.imageUrl}"
+                     alt="Ảnh thẻ"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+            </td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
+            <td th:text="${employee.departmentId != null ? employee.department.name : ''}"></td>
+            <td th:text="${employee.level}"></td>
+            <td th:text="${employee.phoneNumber}"></td>
+            <td th:text="${employee.salary}"></td>
+            <td th:if="${employee.role.name() == 'USER'}">
+                <button th:onclick="|location.href='/admin/edit-employee/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="'deleteEmployee(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table th:if="${type == 'Account'}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.employee-name}">Tên</th>
+            <th>Email</th>
+            <th th:text="#{table.password}">Mật khẩu</th>
+            <th th:text="#{table.action}">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee,idx : ${employees}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.email}"></td>
+            <td th:text="${employee.password}"></td>
+            <td th:if="${employee.role.name() == 'USER'}">
+                <button th:onclick="|location.href='/admin/edit-account/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="'deleteAccount(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table th:if="${type == 'Employee-achievement'}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.employee-name}">Nhân viên</th>
+            <th th:text="#{table.total-achievement}">Tổng thành tích</th>
+            <th th:text="#{table.total-discipline}">Tổng kỷ luật</th>
+            <th th:text="#{table.reward-point}">Điểm thưởng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="achievement,idx : ${listAchievements}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${achievement.name}"></td>
+            <td th:text="${achievement.totalAchievements}"></td>
+            <td th:text="${achievement.totalDisciplinary}"></td>
+            <td th:text="${achievement.rewardPoints}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table th:if="${type == 'Department-achievement'}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.department-name}">Phòng ban</th>
+            <th th:text="#{table.total-achievement}">Tổng thành tích</th>
+            <th th:text="#{table.total-discipline}">Tổng kỷ luật</th>
+            <th th:text="#{table.reward-point}">Điểm thưởng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="achievement,idx : ${listAchievements}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${achievement.name}"></td>
+            <td th:text="${achievement.totalAchievements}"></td>
+            <td th:text="${achievement.totalDisciplinary}"></td>
+            <td th:text="${achievement.rewardPoints}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function deleteDepartment(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa phòng ban này không?')) {
+                location.href = '/admin/delete-department/' + id;
+            }
+        }
+
+        function deleteEmployee(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) {
+                location.href = '/admin/delete-employee/' + id;
+            }
+        }
+
+        function searchEmployees() {
+            const query = document.getElementById('searchInput').value;
+            fetch('/admin/search?query=' + encodeURIComponent(query))
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('employeeTableBody').innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function deleteAccount(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) {
+                location.href = '/admin/delete-account/' + id; // Gọi phương thức xóa
+            }
+        }
+    </script>
+
+</body>
+</html>

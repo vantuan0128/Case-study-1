@@ -1,8 +1,8 @@
 package com.tun.casestudy1.service;
 
-import com.tun.casestudy1.dto.DepartmentAchievementDto;
-import com.tun.casestudy1.dto.EmployeeAchievementDto;
-import com.tun.casestudy1.dto.ExcellentEmployeeDto;
+import com.tun.casestudy1.dto.response.DepartmentAchievementDto;
+import com.tun.casestudy1.dto.response.EmployeeAchievementDto;
+import com.tun.casestudy1.dto.response.ExcellentEmployeeDto;
 import com.tun.casestudy1.entity.EmployeeRecord;
 import com.tun.casestudy1.repository.EmployeeRecordRepository;
 import lombok.AccessLevel;

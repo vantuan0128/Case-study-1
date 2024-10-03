@@ -5,10 +5,13 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Locale;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class HomeController {
 
     AuthService authService;
+    MessageSource messageSource;
 
     @GetMapping({"/", "/login"})
     public String getLoginPage() {
@@ -23,7 +27,7 @@ public class HomeController {
     }
 
     @PostMapping("/login")
-    public String login(String username, String password, HttpSession session, Model model) {
+    public String login(String username, String password, HttpSession session, Model model, Locale locale) {
         String viewName = authService.authenticate(username, password);
 
         if (viewName != null) {
@@ -34,7 +38,8 @@ public class HomeController {
             return viewName;
         }
 
-        model.addAttribute("error", "Thông tin đăng nhập không hợp lệ"); // Thêm thông báo lỗi
+        model.addAttribute("error", messageSource.getMessage("login.error", null, locale));
         return "login";
     }
+
 }

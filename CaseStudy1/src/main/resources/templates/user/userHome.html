@@ -4,24 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+
 </head>
 <body>
-<!--<div th:replace="fragments/header :: header"></div>-->
+    <a th:href="@{/user/logout}" th:text="#{header.logout}">Đăng xuất</a>
+    <h1 th:text="#{message.excellent-employee}">10 gương mặt xuất sắc nhất công ty</h1>
 
-<nav>
-    <ul>
-        <li><a href="/home">Trang chủ</a></li>
-        <li><a href="/employee-management">Quản lý nhân viên</a></li>
-        <li><a href="/department-management">Quản lý phòng ban</a></li>
-        <li><a href="/account-management">Quản lý tài khoản</a></li>
-        <li><a href="/achievement-records">Ghi nhận thành tích</a></li>
-        <li><a href="/logout">Đăng xuất</a></li>
-    </ul>
-</nav>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.employee-name}">Nhân viên</th>
+            <th th:text="#{table.image}">Ảnh</th>
+            <th th:text="#{table.department-name}">Tên phòng ban</th>
+            <th th:text="#{table.number-of-achievement}">Số thành tích</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="excellentEmployee,idx : ${excellentEmployees}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${excellentEmployee.name}"></td>
+            <td>
+                <img th:src="${excellentEmployee.imageUrl}"
+                     alt="Ảnh thẻ"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+            </td>
+            <td th:text="${excellentEmployee.nameOfDept}"></td>
+            <td th:text="${excellentEmployee.totalAchievements}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-<h1>Chào mừng bạn đến với trang chủ!</h1>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<!--<div th:replace="fragments/footer :: footer"></div>-->
 </body>
 </html>
