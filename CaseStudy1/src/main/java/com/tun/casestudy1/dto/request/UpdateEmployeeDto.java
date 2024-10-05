@@ -22,7 +22,7 @@ import java.util.List;
 public class UpdateEmployeeDto {
     String name;
 
-    @Min(value = 0, message = "{error.salary}")
+    @Min(value = 0, message = "error.salary")
     int salary;
 
     @Min(value = 1, message = "error.level")
@@ -33,4 +33,6 @@ public class UpdateEmployeeDto {
     String phoneNumber;
 
     Integer departmentId;
+
+    String imageUrl;
 }

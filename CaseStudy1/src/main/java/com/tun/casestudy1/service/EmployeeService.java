@@ -8,7 +8,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -17,6 +19,7 @@ import java.util.List;
 public class EmployeeService implements IService<Employee>{
 
     EmployeeRepository employeeRepository;
+    FileStorageService fileStorageService;
 
     @Override
     public List<Employee> findAll() {
@@ -35,7 +38,12 @@ public class EmployeeService implements IService<Employee>{
 
     @Override
     public void save(Employee employee) {
-        Employee employee1 = Employee.builder()
+        boolean emailExists = employeeRepository.findByEmail(employee.getEmail()).isPresent();
+        if (emailExists) {
+            throw new RuntimeException("Existed");
+        }
+
+        Employee employee2 = Employee.builder()
                 .name(employee.getName())
                 .email(employee.getEmail())
                 .password(employee.getPassword())
@@ -48,12 +56,13 @@ public class EmployeeService implements IService<Employee>{
                 .dOB(employee.getDOB())
                 .departmentId(employee.getDepartmentId())
                 .build();
-        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
     }
 
     public void updateAccount(int id, UpdateAccountDto employee) {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
+
         employee1.setName(employee.getName());
         employee1.setEmail(employee.getEmail());
         employee1.setPassword(employee.getPassword());
@@ -61,9 +70,18 @@ public class EmployeeService implements IService<Employee>{
         employeeRepository.save(employee1);
     }
 
-    public void updateEmployee(int id, UpdateEmployeeDto employee) {
+    public void updateEmployee(int id, UpdateEmployeeDto employee, MultipartFile imageFile) throws IOException {
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
+
+        if (imageFile == null || imageFile.isEmpty() || imageFile.getOriginalFilename().isEmpty()) {
+            employee1.setImageUrl(employee1.getImageUrl());
+        }
+        else{
+            String fileName = fileStorageService.save(imageFile);
+            employee1.setImageUrl(fileName);
+        }
+
         employee1.setName(employee.getName());
         employee1.setLevel(employee.getLevel());
         employee1.setPhoneNumber(employee.getPhoneNumber());

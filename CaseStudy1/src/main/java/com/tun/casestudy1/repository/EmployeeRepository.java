@@ -14,7 +14,6 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
     Optional<Employee> findByEmail(String email);
 
-    // Tim kiem theo bat ky truong nao
     @Query(value = "SELECT e.* FROM employee e " +
             "LEFT JOIN department d ON e.department_id = d.id " +
             "WHERE LOWER(e.name) LIKE LOWER(CONCAT('%', :searchValue, '%')) " +

@@ -11,17 +11,27 @@ import com.tun.casestudy1.entity.EmployeeRecord;
 import com.tun.casestudy1.service.DepartmentService;
 import com.tun.casestudy1.service.EmployeeRecordService;
 import com.tun.casestudy1.service.EmployeeService;
+import com.tun.casestudy1.service.FileStorageService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.context.MessageSource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/admin")
@@ -32,6 +42,8 @@ public class AdminController {
     EmployeeService employeeService;
     DepartmentService departmentService;
     EmployeeRecordService employeeRecordService;
+    FileStorageService fileStorageService;
+    MessageSource messageSource;
 
     // Get View
 
@@ -39,48 +51,42 @@ public class AdminController {
     public String adminHomePage(Model model) {
         List<ExcellentEmployeeDto> excellentEmployeeDtos = employeeRecordService.findExcellentEmployees();
         model.addAttribute("excellentEmployees", excellentEmployeeDtos);
-        model.addAttribute("type", "Homepage");
-        return "admin/view-list";
+        return "admin/achievement/excellent-employee";
     }
 
     @GetMapping("/employee-management")
     public String getEmployeeManagementPage(Model model)  {
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
-        model.addAttribute("type", "Employee");
-        return "admin/view-list";
+        return "admin/employee/view-list";
     }
 
     @GetMapping("/department-management")
     public String getDepartmentManagementPage(Model model) {
         List<Department> departments = departmentService.findAll();
         model.addAttribute("departments", departments);
-        model.addAttribute("type", "Department");
-        return "admin/view-list";
+        return "admin/department/view-list";
     }
 
     @GetMapping("/account-management")
     public String getAccountManagementPage(Model model) {
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
-        model.addAttribute("type", "Account");
-        return "admin/view-list";
+        return "admin/account/view-list";
     }
 
     @GetMapping("/view-people-achievements")
     public String getPeopleAchievements(Model model) {
         List<EmployeeAchievementDto> listAchievements = employeeRecordService.findAndCountByEmployeeId();
         model.addAttribute("listAchievements", listAchievements);
-        model.addAttribute("type", "Employee-achievement");
-        return "admin/view-list";
+        return "admin/achievement/list-achieve-employee";
     }
 
     @GetMapping("/view-departments-achievements")
     public String getDepartmentsAchievements(Model model) {
         List<DepartmentAchievementDto> listAchievements = employeeRecordService.findAndCountByDepartmentId();
         model.addAttribute("listAchievements", listAchievements);
-        model.addAttribute("type", "Department-achievement");
-        return "admin/view-list";
+        return "admin/achievement/list-achieve-dept";
     }
 
     @GetMapping("/logout")
@@ -93,23 +99,21 @@ public class AdminController {
     @GetMapping("/add-department")
     public String getAddDepartmentPage(Model model) {
         model.addAttribute("type", "Department");
-        return "admin/add";
+        return "admin/department/add";
     }
 
     @GetMapping("/add-employee")
     public String getAddEmployeePage(Model model){
         List<Department> departments = departmentService.findAll();
         model.addAttribute("departments", departments);
-        model.addAttribute("type", "Employee");
-        return "admin/add";
+        return "admin/employee/add";
     }
 
     @GetMapping("/create-achievement")
     public String getAddAchievementPage(Model model) {
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
-        model.addAttribute("type", "Employee-achievement");
-        return "admin/add";
+        return "admin/achievement/add";
     }
 
     // Get Edit View
@@ -118,16 +122,14 @@ public class AdminController {
     public String getEditAccountPage(@PathVariable("id") int id, Model model) {
         Employee employee = employeeService.find(id);
         model.addAttribute("employee", employee);
-        model.addAttribute("type", "Account");
-        return "admin/edit";
+        return "admin/account/edit";
     }
 
     @GetMapping("/edit-department/{id}")
     public String getEditDepartmentPage(@PathVariable("id") int id, Model model) {
         Department department = departmentService.find(id);
         model.addAttribute("department", department);
-        model.addAttribute("type", "Department");
-        return "admin/edit";
+        return "admin/department/edit";
     }
 
     @GetMapping("/edit-employee/{id}")
@@ -136,15 +138,38 @@ public class AdminController {
         model.addAttribute("employee", employee);
         List<Department> departments = departmentService.findAll();
         model.addAttribute("departments", departments);
-        model.addAttribute("type", "Employee");
-        return "admin/edit";
+        return "admin/employee/edit";
     }
 
     // Save
     @PostMapping("/add-employee")
-    public String addEmployee(@ModelAttribute Employee employee) {
-         employeeService.save(employee);
-         return "redirect:/admin/employee-management";
+    public String addEmployee(@Valid @ModelAttribute Employee employee,
+                              @RequestParam("image-file") MultipartFile imageFile,
+                              Model model, Locale locale) throws IOException {
+        if (imageFile == null || imageFile.isEmpty() || imageFile.getOriginalFilename().isEmpty()) {
+            employee.setImageUrl(null);
+        }
+        else{
+            String fileName = fileStorageService.save(imageFile);
+            employee.setImageUrl(fileName);
+        }
+         String path = fileStorageService.save(imageFile);
+         employee.setImageUrl(path);
+
+        try {
+            employeeService.save(employee);
+        } catch (RuntimeException e) {
+            String errorMessage = messageSource.getMessage("error.duplicate", null, locale);
+            model.addAttribute("errorMessage", errorMessage);
+
+            model.addAttribute("employees", employeeService.findAll());
+
+            List<Department> departments = departmentService.findAll();
+            model.addAttribute("departments", departments);
+            return "admin/employee/add";
+        }
+
+        return "redirect:/admin/employee-management";
     }
 
     @PostMapping("/add-department")
@@ -179,8 +204,9 @@ public class AdminController {
 
     @PostMapping("/edit-employee")
     public String updateEmployee(@RequestParam("id") int id,
-                                 @Valid @ModelAttribute UpdateEmployeeDto employee) {
-        employeeService.updateEmployee(id, employee);
+                                 @Valid @ModelAttribute UpdateEmployeeDto employee,
+                                 @RequestParam("image-file") MultipartFile imageFile) throws IOException {
+        employeeService.updateEmployee(id, employee, imageFile);
         return "redirect:/admin/employee-management";
     }
 
@@ -212,6 +238,14 @@ public class AdminController {
         List<Employee> employees = employeeService.searchUser(query);
         model.addAttribute("employees", employees.isEmpty() ? new ArrayList<>() : employees);
         return "fragments/employee-fragment";
+    }
+
+    @GetMapping("/files/{filename}")
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws MalformedURLException {
+        Resource file = fileStorageService.load(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"anh" + "\"")
+                .body(file);
     }
 
 }

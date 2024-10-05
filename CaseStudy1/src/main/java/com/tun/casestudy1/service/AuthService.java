@@ -31,8 +31,8 @@ public class AuthService {
     public String getRoleByUsername(String username) {
         Employee employee = employeeRepository.findByEmail(username).orElse(null);
         if (employee != null) {
-            return employee.getRole().name(); // giả sử role là enum
+            return employee.getRole().name();
         }
-        return null; // người dùng không tồn tại
+        return null;
     }
 }
