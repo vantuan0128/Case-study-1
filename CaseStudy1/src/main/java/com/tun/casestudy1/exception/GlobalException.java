@@ -11,12 +11,6 @@ import java.util.Locale;
 
 @ControllerAdvice
 public class GlobalException {
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public String handleValidationException(MethodArgumentNotValidException ex, Model model) {
-//        String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
-//        model.addAttribute("error", errorMessage);
-//        return "admin/edit";
-//    }
 
     @Autowired
     private MessageSource messageSource;
@@ -26,6 +20,7 @@ public class GlobalException {
         String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
         String localizedErrorMessage = messageSource.getMessage(errorMessage, null, locale);
         model.addAttribute("error", localizedErrorMessage);
-        return "admin/edit";
+
+        return "fail";
     }
 }

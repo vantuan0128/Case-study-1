@@ -2,11 +2,10 @@ package com.tun.casestudy1.entity;
 
 import com.tun.casestudy1.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,14 +29,19 @@ public class Employee {
 
     LocalDate dOB;
 
+    @Min(value = 0, message = "error.salary")
     int salary;
 
+    @Min(value = 1, message = "error.level")
+    @Max(value = 10, message = "error.level")
     int level;
 
+    @Email(message = "error.email")
     String email;
 
     String password;
 
+    @Pattern(regexp = "\\d{10}", message = "error.phoneNumber")
     String phoneNumber;
 
     String note;

@@ -1,19 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Home</title>
+    <title>Admin Home</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/table.css">
-    <link rel="stylesheet" type="text/css" href="/css/header.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/footer.css">
-
 </head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
 
-    <a th:href="@{/user/logout}" th:text="#{header.logout}">Đăng xuất</a>
     <h1 th:text="#{message.excellent-employee}">10 gương mặt xuất sắc nhất công ty</h1>
 
     <table>
@@ -32,7 +28,7 @@
             <td th:text="${excellentEmployee.name}"></td>
             <td>
                 <img th:if="${excellentEmployee.imageUrl != null}"
-                     th:src="@{/user/files/{filename}(filename=${excellentEmployee.imageUrl})}"
+                     th:src="@{/admin/files/{filename}(filename=${excellentEmployee.imageUrl})}"
                      alt="Ảnh thẻ"
                      style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
                 <p th:if="${excellentEmployee.imageUrl == null}">Không có ảnh</p>
