@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -55,23 +56,42 @@ public class AdminController {
     }
 
     @GetMapping("/employee-management")
-    public String getEmployeeManagementPage(Model model)  {
-        List<Employee> employees = employeeService.findAll();
-        model.addAttribute("employees", employees);
+    public String getEmployeeManagementPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            Model model)  {
+        Page<Employee> employeePage = employeeService.findPaginated(page, size);
+        model.addAttribute("employees", employeePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeePage.getTotalPages());
+        model.addAttribute("pageSize", size);
+
         return "admin/employee/view-list";
     }
 
     @GetMapping("/department-management")
-    public String getDepartmentManagementPage(Model model) {
-        List<Department> departments = departmentService.findAll();
-        model.addAttribute("departments", departments);
+    public String getDepartmentManagementPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            Model model) {
+        Page<Department> departmentPage = departmentService.findPaginated(page, size);
+        model.addAttribute("departments", departmentPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", departmentPage.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "admin/department/view-list";
     }
 
     @GetMapping("/account-management")
-    public String getAccountManagementPage(Model model) {
-        List<Employee> employees = employeeService.findAll();
-        model.addAttribute("employees", employees);
+    public String getAccountManagementPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            Model model) {
+        Page<Employee> employeePage = employeeService.findPaginated(page, size);
+        model.addAttribute("employees", employeePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeePage.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "admin/account/view-list";
     }
 
@@ -93,6 +113,13 @@ public class AdminController {
     public String logOut(HttpSession session) {
         session.invalidate();
         return "redirect:/";
+    }
+
+    @GetMapping("/view-list-employees-in-dept/{id}")
+    public String getListEmployeesInDeptPage(@PathVariable("id") int id, Model model) {
+        List<Employee> employees = employeeService.getListEmployeesInDept(id);
+        model.addAttribute("employees", employees);
+        return "admin/employee/view-list-employee-in-dept";
     }
 
     // Get Add View
@@ -190,15 +217,36 @@ public class AdminController {
 
     @PostMapping("/edit-account")
     public String updateAccount(@RequestParam("id") int id,
-                                @Valid @ModelAttribute UpdateAccountDto employee) {
-        employeeService.updateAccount(id, employee);
+                                @Valid @ModelAttribute UpdateAccountDto employee,
+                                Model model,
+                                Locale locale) {
+
+        try {
+            employeeService.updateAccount(id, employee);
+        } catch (RuntimeException e) {
+            String errorMessage = messageSource.getMessage("error.duplicate", null, locale);
+            model.addAttribute("errorMessage", errorMessage);
+            Employee employee1 = employeeService.find(id);
+            model.addAttribute("employee", employee1);
+            return "admin/account/edit";
+        }
         return "redirect:/admin/account-management";
     }
 
     @PostMapping("/edit-department")
     public String updateDepartment(@RequestParam("id") int id,
-                                   @RequestParam("name") String name) {
-        departmentService.update(id, name);
+                                   @RequestParam("name") String name,
+                                   Model model,
+                                   Locale locale) {
+        try {
+            departmentService.update(id, name);
+        } catch (RuntimeException e) {
+            String errorMessage = messageSource.getMessage("error.name.duplicate", null, locale);
+            model.addAttribute("errorMessage", errorMessage);
+            Department department = departmentService.find(id);
+            model.addAttribute("department", department);
+            return "admin/department/edit";
+        }
         return "redirect:/admin/department-management";
     }
 

@@ -7,11 +7,15 @@ import com.tun.casestudy1.repository.EmployeeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +33,12 @@ public class EmployeeService implements IService<Employee>{
     @Override
     public Employee find(int id) {
         return employeeRepository.findById(id).orElse(null);
+    }
+
+    public Page<Employee> findPaginated(int page, int size)  {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return employeeRepository.findAll(pageable);
+
     }
 
     @Override
@@ -63,6 +73,11 @@ public class EmployeeService implements IService<Employee>{
         Employee employee1 = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
 
+        Optional<Employee> existingEmployee = employeeRepository.findByEmail(employee.getEmail());
+        if (existingEmployee.isPresent() && existingEmployee.get().getId() != id) {
+            throw new RuntimeException("Email already exists");
+        }
+
         employee1.setName(employee.getName());
         employee1.setEmail(employee.getEmail());
         employee1.setPassword(employee.getPassword());
@@ -87,12 +102,17 @@ public class EmployeeService implements IService<Employee>{
         employee1.setPhoneNumber(employee.getPhoneNumber());
         employee1.setSalary(employee.getSalary());
         employee1.setDepartmentId(employee.getDepartmentId());
+        employee1.setDOB(employee.getDOB());
 
         employeeRepository.save(employee1);
     }
 
     public List<Employee> searchUser(String query) {
         return employeeRepository.searchByQuery(query);
+    }
+
+    public List<Employee> getListEmployeesInDept(int id) {
+        return employeeRepository.findAllByDepartmentId(id);
     }
 
 }

@@ -16,7 +16,6 @@ import java.util.UUID;
 public class FileStorageService {
     private final Path root = Paths.get("./uploads");
 
-
     public void init() {
         try {
             Files.createDirectories(root);

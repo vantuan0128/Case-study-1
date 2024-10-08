@@ -40,7 +40,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void testUserAuthenticationSuccess() {
+    public void testUserAuthenticationSuccess() {
         Employee employee = new Employee();
         employee.setEmail("h@gmail.com");
         employee.setPassword("333");
@@ -60,7 +60,6 @@ public class AuthServiceTest {
         String result = authService.authenticate("test@gmail.com", "111");
 
         assertNull(result);
-
     }
 
     @Test
@@ -82,11 +81,8 @@ public class AuthServiceTest {
         Employee employee = new Employee();
         employee.setEmail("test@gmail.com");
         employee.setRole(Role.ADMIN);
-
         Mockito.when(employeeRepository.findByEmail("test@gmail.com")).thenReturn(Optional.of(employee));
-
         String role = authService.getRoleByUsername("test@gmail.com");
-
         assertEquals("ADMIN", role);
     }
 }

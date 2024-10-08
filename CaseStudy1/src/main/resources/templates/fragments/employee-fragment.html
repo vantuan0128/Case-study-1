@@ -2,9 +2,11 @@
 <tr th:each="employee,idx : ${employees}">
     <td th:text="${idx.count}"></td>
     <td>
-        <img th:src="${employee.imageUrl}"
+        <img th:if="${employee.imageUrl != null}"
+             th:src="@{/admin/files/{filename}(filename=${employee.imageUrl})}"
              alt="Ảnh thẻ"
-             style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+             style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
+        <p th:if="${employee.imageUrl == null}">Không có ảnh</p>
     </td>
     <td th:text="${employee.name}"></td>
     <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
