@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/css/pagination.css">
     <style>
         .title-button {
             display: flex;
@@ -45,12 +46,15 @@
             <td th:text="${idx.count}"></td>
             <td th:text="${department.name}"></td>
             <td>
+                <button th:onclick="|location.href='/admin/view-list-employees-in-dept/' + ${department.id}|" th:text="#{table.button.view}">Xem</button>
                 <button th:onclick="|location.href='/admin/edit-department/' + ${department.id}|" th:text="#{table.button.update}">Sửa</button>
                 <button th:onclick="'deleteDepartment(' + ${department.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/department-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
@@ -60,6 +64,30 @@
                 location.href = '/admin/delete-department/' + id;
             }
         }
+
+        function changePage(page = 1) {
+            const pageSize = document.getElementById('pageSize').value;
+
+            fetch('/admin/department-management?page=' + page + '&size=' + pageSize)
+                .then(response => response.text())
+                .then(html => {
+                    document.body.innerHTML = html;
+                })
+
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        document.getElementById('pageSize').addEventListener('change', function() {
+            changePage(1);
+        });
+
+        document.querySelectorAll('.pagination-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = this.getAttribute('data-page');
+                changePage(page);
+            });
+        });
     </script>
 
 </body>
